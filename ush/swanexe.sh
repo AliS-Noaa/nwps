@@ -567,7 +567,8 @@ then
          done
 
          echo "Starting PuNSWAN executable for "${siteid}
-	 mpiexec -n 48 -ppn 48 ${EXECnwps}/punswan4110.exe
+	 #mpiexec -n 48 -ppn 48 ${EXECnwps}/punswan4110.exe
+         srun --ntasks 48 --ntasks-per-node 48 ${EXECnwps}/punswan4110.exe
          export err=$?;
          echo "Exit Code: ${err}" | tee -a ${LOGdir}/swan_exe_error.log
          cp ${RUNdir}/PE0000/PRINT ${RUNdir}/
@@ -594,7 +595,8 @@ then
    echo "${PYTHON} ${RUNdir}/swn_reginterpCG${CGNUM}.py ${RUNdir}/ CG_UNSTRUC.nc CG${CGNUM} WATL ${siteid}" >> ${RUNdir}/reginterpCG${CGNUM}_cmdfile
    echo "${PYTHON} ${RUNdir}/swn_reginterpCG${CGNUM}.py ${RUNdir}/ CG_UNSTRUC.nc CG${CGNUM} HSWE ${siteid}" >> ${RUNdir}/reginterpCG${CGNUM}_cmdfile
 
-   mpiexec -np 8 --cpu-bind verbose,core cfp ${RUNdir}/reginterpCG${CGNUM}_cmdfile
+   #mpiexec -np 8 --cpu-bind verbose,core cfp ${RUNdir}/reginterpCG${CGNUM}_cmdfile
+   srun -n 8 --cpu-bind=verbose,cores cfp ${RUNdir}/reginterpCG${CGNUM}_cmdfile
    export err=$?; err_chk
 fi
 
