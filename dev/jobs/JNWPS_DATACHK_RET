@@ -35,7 +35,7 @@ export RUN=$(echo ${job}|awk -F"_" '{print $2}')
 # SETUP NWPS SHELL VARIABLES
 # #############################################
 export ver=${nwps_ver}
-
+source $NWPSdir/env/detect_machine.sh
 if [[ $MACHINE_ID = hera ]] ; then
   export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro
   export COMROOT=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/com/retro
