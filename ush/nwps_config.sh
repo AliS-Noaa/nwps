@@ -190,6 +190,28 @@ then
     fi
 fi
 
+if [ "${NWPSplatform}" == "HERA" ]
+then
+    HERA="TRUE"
+    HERA_SYSTEM=""
+    HERA_USER=$(whoami)
+    if [ -e /u/${HERA_USER} ] && [ -e /ptmpp1 ]
+    then
+        echo "INFO - Configuring NWPS for HERA system"
+        HERA="TRUE"
+        if [ -e /gpfs/gd1 ]
+        then
+        echo "INFO - HERA is on GYRE system"
+        HERA_SYSTEM="GYRE"
+        fi
+        if [ -e /gpfs/td1 ]
+        then
+        echo "INFO - HERA is on TIDE system"
+        HERA_SYSTEM="TIDE"
+        fi
+    fi
+fi
+
 if [ "${NWPSplatform}" == "DEVWCOSS" ]
 then
     echo "NWPS is installed on DEVWCOSS platform, loading WCOSS config"
@@ -200,6 +222,20 @@ then
 	export err=1; err_chk
     else
 	source ${NWPSdir}/ush/devwcoss_config.sh
+    fi
+fi
+
+
+if [ "${NWPSplatform}" == "DEVHERA" ]
+then
+    echo "NWPS is installed on DEVHERA platform, loading HERA config"
+    if [ ! -e ${NWPSdir}/ush/devhera_config.sh ]
+    then
+        echo "ERROR - Missing HERA config file ${NWPSdir}/ush/devhera_config.sh"
+        echo "ERROR - Check your NWPS platform type"
+        export err=1; err_chk
+    else
+        source ${NWPSdir}/ush/devhera_config.sh
     fi
 fi
 

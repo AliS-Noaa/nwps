@@ -165,7 +165,7 @@ then
 elif [ $NWPSplatform == "IFPSWAN" ]
 then
   NWPSDATA="${NWPSIFPSWANDATA}"
-elif [ $NWPSplatform == "WCOSS" ] || [ $NWPSplatform == "DEVWCOSS" ]
+elif [ $NWPSplatform == "WCOSS" ] || [ $NWPSplatform == "DEVWCOSS" ] || [ $NWPSplatform == "HERA" ] || [ $NWPSplatform == "DEVHERA" ]
 then
   NWPSDATA="${DATA}"
 fi

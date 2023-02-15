@@ -1,0 +1,159 @@
+#!/bin/bash
+# ----------------------------------------------------------- 
+# UNIX Shell Script File
+# Tested Operating System(s): RHEL 5,6
+# Tested Run Level(s): 3, 5
+# Shell Used: BASH shell
+# Original Author(s): Roberto Padilla-Hernandez
+# File Creation Date: 02/01/2015
+# Date Last Modified:
+#
+# Version control: 1.14
+#
+# Support Team:
+#
+# Contributors: Floyd fayton
+#
+# ----------------------------------------------------------- 
+# ------------- Program Description and Details ------------- 
+# ----------------------------------------------------------- 
+#
+# Job Card to set the resources required for a NWPS run
+#
+# ----------------------------------------------------------- 
+#SBATCH -J %WFO%_fc_c1r
+#SBATCH -A marine-cpu
+#SBATCH -n 72
+#SBATCH -q batch
+#SBATCH --cpus-per-task=1
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=36
+#SBATCH -t 04:25:00
+#SBATCH --mem=230G
+#SBATCH -o jobslurm.out
+#SBATCH --output=/scratch1/NCEPDEV/stmp2/Ali.Salimi/com/retro/nwps/v1.5.0/NWPS_%WFO%_forecast_cg1.o
+#SBATCH --error=/scratch1/NCEPDEV/stmp2/Ali.Salimi/com/retro/nwps/v1.5.0/NWPS_%WFO%_forecast_cg1.o
+
+cd $SLURM_SUBMIT_DIR
+
+# Setup and load modules
+export HOMEnwps=${NWPSdir}
+VERSION_FILE=${HOMEnwps}/versions/run_hera.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ECFNAME="jnwps_prep.ecf"
+  echo "***JOB ${ECFNAME} ERROR: Version File $VERSION_FILE does not exist ***"
+  exit
+fi
+
+module purge
+module use /scratch2/NCEPDEV/nwprod/hpc-stack/libs/hpc-stack/modulefiles/stack
+module load hpc/1.1.0
+module load hpc-intel/18.0.5.274
+module load hpc-impi/2018.0.4
+#module load netcdf/4.7.4
+module load g2c/1.6.2
+module load jasper/2.0.25
+module load zlib/1.2.11
+module load png/1.6.35
+#module load hdf5/1.10.6
+module load bacio/2.4.1
+module load g2/3.4.1
+module load w3nco/2.4.1
+module use /scratch1/NCEPDEV/mdl/apps/modulefiles
+module load CFP/2.0.1
+module load esmf/8_1_1
+module load wgrib2/2.0.8
+module load prod_util/1.2.2
+module load grib_util/1.2.4
+module list
+
+
+PATH=${NWPSdir}/lib/netcdf/${netcdf_ver}/bin:$PATH
+PATH=${NWPSdir}/lib/hdf5/${hdf5_ver}/bin:$PATH
+PATH=${NWPSdir}/lib/zlib/${zlib_ver}/bin:$PATH
+LD_LIBRARY_PATH=${NWPSdir}/lib/netcdf/${netcdf_ver}/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=${NWPSdir}/lib/hdf5/${hdf5_ver}/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=${NWPSdir}/lib/zlib/${zlib_ver}/lib:$LD_LIBRARY_PATH
+
+NETCDF_VERSION=${netcdf_ver}
+NetCDF=${NWPSdir}/lib/netcdf/${netcdf_ver}
+NETCDF_ROOT=${NWPSdir}/lib/netcdf/${netcdf_ver}
+HDF5_ROOT=${NWPSdir}/lib/hdf5/${hdf5_ver}
+ZLIB=${NWPSdir}/lib/zlib/${zlib_ver}
+NETCDF_LIBRARIES=${NWPSdir}/lib/netcdf/${netcdf_ver}/lib
+HDF5_LIBRARIES=${NWPSdir}/lib/hdf5/${hdf5_ver}/lib
+ZLIB_LIBRARIES=${NWPSdir}/lib/zlib/${zlib_ver}/lib
+NETCDF_INCLUDES=${NWPSdir}/lib/netcdf/${netcdf_ver}/include
+HDF5_INCLUDES=${NWPSdir}/lib/hdf5/${hdf5_ver}/include
+ZLIB_INCLUDES=${NWPSdir}/lib/zlib/${zlib_ver}/include
+
+export IOBUF_PARAMS="*:count=4:size=32M:prefetch=1:preflush=1"
+
+export FORT_BUFFERED=true
+export NWPSplatform="DEVHERA"
+export MP_PGMMODEL=mpmd
+export MP_CSS_INTERRUPT=yes
+export WFO="%WFO%"
+export siteid=${WFO}
+export SITEID=${WFO^^}
+export N="1"
+export KEEPDATA="YES"
+export model="nwps"
+export MODEL=${model^^}
+
+export envir="para"
+
+export DEVHERA_USER=$(whoami)
+export COMROOT=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/com/retro
+
+#Dev environment value for $job
+export job=pnwps_${WFO}_fc_cg1_ret
+export jobid=pnwps_${WFO}_fc_cg1_ret.$$
+
+#Dev environment jlogfile
+export ver=${nwps_ver}
+mkdir -p /scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/logs/jlogfiles
+export jlogfile=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/logs/jlogfiles/jlogfile.${job}
+
+#Set platform
+export WCOSS_SYSTEM=$( echo $COMROOTp1 | cut -c7 )d1
+export WCOSS_SYSTEM_COM=$( echo $COMROOTp1 | cut -c7-9 )
+
+# Wait for upstream component job to finish
+while [ -z $(grep 'COMPLETED NORMALLY' /scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/logs/jlogfiles/jlogfile.pnwps_%WFO%_prep_ret | awk '{print $1}') ]
+do
+   if [ ! -z $(grep 'FAILED' /scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/logs/jlogfiles/jlogfile.pnwps_%WFO%_prep_ret | awk '{print $1}') ]
+   then
+       msg="FATAL ERROR: Upstream job pnwps_%WFO%_prep_ret failed"
+       postmsg "$jlogfile" "$msg"
+       export err=1; err_chk
+   fi
+   echo 'Waiting for pnwps_%WFO%_prep_ret to complete, at date'
+   date
+   sleep 60
+done
+
+${NWROOT}/dev/jobs/J${MODEL}_FORECAST_RET
+
+#%include <tail.h>
+
+#%manual
+################################################################################
+#TASKSCRIPT DOCUMENTATION BLOCK
+#TASKSCRIPT:     jnwps_%FAMILY1%_forecast_cg%N%
+#LAST MODIFIER:  Floyd Fayton
+#ORGANIZATION:   NP11
+#DATE:           SEP 2014
+#FULL NAME:    /nwps_para/nwps/SR/j%WFO%
+#PURPOSE:  To execute the job that creates NWPS %WFO% GRIB output files
+#JOB SCRIPT CALLED: /nwprod/nwps.${nwps_ver}/jobs/JNWPS ==>
+#                            /nwprod/nwps.${nwps_ver}/scripts/exnwps_forecast_cg%N%.sh.ecf
+#################################################################################
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+#%end

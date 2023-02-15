@@ -95,7 +95,7 @@ my $NWPSplatform = $ENV{'NWPSplatform'};
 ######################################################
 #for_WCOSS
 #codeswanpl03
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile02 = "${RUNdir}/info_to_nwps_coremodel.txt";
     open IN, "<$infoFile02"  or die "Cannot open: $!";
     our ($NWPSdir, $DEBUGGING, $DEBUG_LEVEL, $BATHYdb, $SHAPEFILEdb, $ARCHdir);

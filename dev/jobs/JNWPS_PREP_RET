@@ -37,24 +37,45 @@ set -xa
 #if [ $curhour -ge 22 ]; then CYCLE="18"; fi
 #echo ""
 #echo "INFO - Current hour is ${curhour}, setting model cycle to ${CYCLE}"
+source $NWPSdir/env/detect_machine.sh
 
-cd /lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro
+if [[ $MACHINE_ID = hera ]] ; then
+  export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
 
-#export cyc=${CYCLE}
+cd $DATA
 export cyc=`cat CYC.${WFO^^}`
 export cycle=t${cyc}z
 export pgmout=OUTPUT.$$
 
-export utilscript=${UTILROOT}/ush
-export USHutil=${UTILROOT}/ush
+if [[ $MACHINE_ID = hera* ]] ; then
+  export utilscript=${UTILROOT}/bin
+  export USHutil=${UTILROOT}/bin
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export utilscript=${UTILROOT}/ush
+     export USHutil=${UTILROOT}/ush
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 #sh $utilscript/setpdy.sh
 #mv PDY PDY.${WFO}
 . ./PDY.${WFO^^}
-
 sh $utilscript/setup.sh
 export pgm="NWPS"
 
-export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/${WFO}.${PDY}
+if [[ $MACHINE_ID = hera* ]] ; then
+  export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/${WFO}.${PDY}
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/${WFO}.${PDY}
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 
 mkdir -p $DATA
 cd $DATA
@@ -91,7 +112,14 @@ export BATHYdb=${BATHYdb:-${FIXnwps}/bathy_db}
 export SHAPEFILEdb=${SHAPEFILEdb:-${FIXnwps}/shapefile_db}
 
 # Set processing DIRs here
-export HPSSARCHdir=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/archive
+if [[ $MACHINE_ID = hera* ]] ; then
+  export HPSSARCHdir=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/archive
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export HPSSARCHdir=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/archive
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 export ARCHdir=${ARCHdir:-${DATA}/archive}
 export DATAdir=${DATAdir:-${DATA}/data}
 export INPUTdir=${INPUTdir:-${DATA}/input}
@@ -100,8 +128,8 @@ export OUTPUTdir=${OUTPUTdir:-${DATA}/output}
 export RUNdir=${RUNdir:-${DATA}/run}
 export TMPdir=${TMPdir:-${DATA}/tmp}
 export LOGdir=${LOGdir:-${DATA}/logs}
-export GEN_NETCDF=${GEN_NETCDF:-FALSE}
-export GEN_HDF5=${GEN_HDF5:-FALSE}
+export GEN_NETCDF=${GEN_NETCDF:-TRUE}
+export GEN_HDF5=${GEN_HDF5:-TRUE}
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${HOMEnwps}/lib/szip:${HOMEnwps}/lib/proj
 
 # Set NWPS run conditions
@@ -141,7 +169,15 @@ export COMINrtofs=${COMROOT}/${NET}/${ver}/ofs.${PDY}/rtofs/${WFO}_output
 export COMINrtofsm1=${COMROOT}/${NET}/${ver}/ofs.${PDYm1}/rtofs/${WFO}_output
 export COMINpsurge=${COMROOT}/${NET}/${ver}/ofs.${PDY}/psurge/${WFO}_output
 export COMINpsurgem1=${COMROOT}/${NET}/${ver}/ofs.${PDYm1}/psurge/${WFO}_output
-export dcom=/lfs/h1/ops/prod/dcom
+#export dcom=/scratch1/NCEPDEV/stmp2/Ali.Salimi/RETRO/dcom
+if [[ $MACHINE_ID = hera* ]] ; then
+  export dcom=$dcom
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export dcom=dcom=/lfs/h1/ops/prod/dcom
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 #export dcom="/lfs/h2/emc/couple/noscrub/Andre.VanderWesthuysen/nwps/dcom/prod"
 export FORECASTWINDdir="${dcom}/${PDY}/wgrbbul/${NET}"
 export COM_nwps_R_ES_TOFS="/com"
@@ -172,5 +208,5 @@ cd $DATAROOT
 if [ "$KEEPDATA" != YES ]; then
     rm -rf $DATA
 fi
-
++
 date

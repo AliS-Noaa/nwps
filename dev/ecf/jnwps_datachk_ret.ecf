@@ -22,8 +22,17 @@
 #
 # ----------------------------------------------------------- 
 
+source $NWPSdir/env/detect_machine.sh
+
+if [[ $MACHINE_ID = hera* ]] ; then
 # Setup and load modules
-VERSION_FILE=${NWPSdir}/versions/run.ver
+  VERSION_FILE=${NWPSdir}/versions/run_hera.ver
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     VERSION_FILE=${NWPSdir}/versions/run_wcoss2.ver
+else 
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -35,13 +44,20 @@ fi
 export HOMEnwps=${NWPSdir}
 export NWROOT=${NWPSdir}
 
-module purge
-module load envvar/${envvar_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
+#module purge
+#module load envvar/${envvar_ver}
+#module load prod_envir/${prod_envir_ver}
+#module load prod_util/${prod_util_ver}
 
 export FORT_BUFFERED=true
-export NWPSplatform="DEVWCOSS"
+if [[ $MACHINE_ID = hera* ]] ; then
+  export NWPSplatform="DEVHERA"
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export NWPSplatform="DEVWCOSS"
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 export MP_PGMMODEL=mpmd
 export MP_CSS_INTERRUPT=yes
 export KEEPDATA="YES"
@@ -51,10 +67,16 @@ export MODEL=${model^^}
 export envir="para"
 
 #Set platform
-export WCOSS_SYSTEM=$( echo $COMROOTp1 | cut -c7 )d1
-export WCOSS_SYSTEM_COM=$( echo $COMROOTp1 | cut -c7-9 )
+##export WCOSS_SYSTEM=$( echo $COMROOTp1 | cut -c7 )d1
+##export WCOSS_SYSTEM_COM=$( echo $COMROOTp1 | cut -c7-9 )
+if [[ $MACHINE_ID = hera* ]] ; then
+  export DEVHERA_USER=$(whoami)
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DEVWCOSS_USER=$(whoami)
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
 
-export DEVWCOSS_USER=$(whoami)
 
 ${HOMEnwps}/dev/jobs/J${MODEL}_DATACHK_RET
 

@@ -1,0 +1,48 @@
+export nwps_ver=v1.5.0
+export estofs_ver=v2.1
+export stofs_ver=v1.1
+export rtofs_ver=v2.3
+export seaice_analysis_ver=v4.5
+export psurge_ver=v2.10
+export gfs_ver=v16.2
+
+export intel_ver=18.0.5.274
+#export craype_ver=2.7.8
+#export cray_pals_ver=1.0.12
+#export cray_mpich_ver=8.1.7
+export cfp_ver=2.0.1
+export wgrib2_ver=2.0.8
+export grib_util_ver=1.2.2
+export jasper_ver=2.0.25
+export libpng_ver=1.6.35
+#export libjpeg_ver=9c
+export zlib_ver=1.2.8
+#export cpe_ver=21.09
+#export proj_ver=7.1.0
+#export geos_ver=3.8.1
+export python_ver=3.8.6
+export w3nco_ver=2.4.1
+#export util_shared_ver=1.4.0
+#export perl_ver=5.32.0 # new
+export netcdf_ver=4.2
+export hdf5_ver=1.8.9
+
+# for testing canned data
+#export PDY=20210824 #or 20210823
+#export DCOMROOT=/lfs/h1/ops/canned/dcom
+
+# use para seaice_analysis. canned structure is different: omb/ver/sice.$PDY
+#export COMPATH=/lfs/h1/ops/canned/com/nwps:/lfs/h1/ops/canned/com/estofs:/lfs/h1/ops/canned/com/rtofs:/lfs/h1/ops/canned/com/seaice_analysis:/lfs/h1/ops/canned/com/psurge:/lfs/h1/ops/canned/com/gfs
+##export COMPATH=/lfs/h1/ops/canned/com/nwps:/lfs/h1/ops/canned/com/estofs:/lfs/h1/ops/canned/com/rtofs:/lfs/h1/ops/canned/com/psurge:/lfs/h1/ops/canned/com/gfs
+
+#prod testing
+export SENDWEB=NO
+export PARATEST=NO
+
+#export DBNLOG=NO
+export SENDDBN=YES
+
+
+export LOUD=on
+#export DATAFS=h1
+

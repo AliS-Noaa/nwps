@@ -42,15 +42,40 @@ export cyc=`cat CYC.${WFO^^}`
 export cycle=t${cyc}z
 export pgmout=OUTPUT.$$
 
-cd /lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/
+source $NWPSdir/env/detect_machine.sh
 
-export utilscript=${UTILROOT}/ush
-export USHutil=${UTILROOT}/ush
+if [[ $MACHINE_ID = hera ]] ; then
+  export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
+cd $DATA
+
+
+if [[ $MACHINE_ID = hera* ]] ; then
+  export utilscript=${UTILROOT}/bin
+  export USHutil=${UTILROOT}/bin
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export utilscript=${UTILROOT}/ush
+     export USHutil=${UTILROOT}/ush
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 . ./PDY.${WFO^^}
 
 export pgm="NWPS"
 
-export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/${WFO}.${PDY}
+if [[ $MACHINE_ID = hera* ]] ; then
+  export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro/${WFO}.${PDY}
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro/${WFO}.${PDY}
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
 
 mkdir -p $DATA
 cd $DATA
@@ -137,7 +162,15 @@ export COMINrtofs=${COMROOT}/${NET}/${ver}/ofs.${PDY}/rtofs/${WFO}_output
 export COMINrtofsm1=${COMROOT}/${NET}/${ver}/ofs.${PDYm1}/rtofs/${WFO}_output
 export COMINpsurge=${COMROOT}/${NET}/${ver}/ofs.${PDY}/psurge/${WFO}_output
 export COMINpsurgem1=${COMROOT}/${NET}/${ver}/ofs.${PDYm1}/psurge/${WFO}_output
-export dcom=/lfs/h1/ops/prod/dcom
+
+if [[ $MACHINE_ID = hera* ]] ; then
+  export dcom=$dcom
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export dcom=dcom=/lfs/h1/ops/prod/dcom
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+
 export FORECASTWINDdir="${dcom}/${PDY}/wgrbbul/${NET}"
 export COM_nwps_R_ES_TOFS="/com"
 export COMOUTwmo=${COMROOT}/${NET}/${ver}/${REGION}.${PDY}/wmo

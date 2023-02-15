@@ -154,7 +154,7 @@ if ($WNA eq "WNAWave" || $WNA eq "HURWave") {
 Logs::run("Pre-process wind data.");
 ($date,$inpGrid,$filename)=&windInputProcessing();
 
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile = "${RUNdir}/info_to_makeSwanRun.txt";
     open(my $fh, '>', $infoFile) or die "Could not open file '$infoFile' $!";
     print $fh "$date\n";
@@ -229,7 +229,7 @@ elsif ($WATERLEVELS eq "PSURGE" && $PSURGE eq "YES") {
 
 #AW11416: Added call to makeSwanRun from RunSwan.pm here, to unify preprocessing
 
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile01 = "${RUNdir}/info_to_makeSwanRun.txt";
     open IN, "<$infoFile01"  or die "Cannot open: $!";
     my $ndata=0;

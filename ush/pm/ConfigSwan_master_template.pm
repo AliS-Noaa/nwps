@@ -80,7 +80,7 @@ use constant RUNFROMARCHIVE => '';
 #our @SAVEARCHIVEFILES = ('SWAN_TAE_ARCHIVE.YY07.MO012.DD15.HH12.tgz');
 our @SAVEARCHIVEFILES = ('');
 
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
 #for_WCOSS
 #codeConfigpm01
     my $infoFile02 = "${RUNdir}/info_to_nwps_coremodel.txt";

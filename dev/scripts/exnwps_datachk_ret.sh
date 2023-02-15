@@ -226,7 +226,8 @@ do                             #read line
    elif [ "${region}" == "er" ]; then
       wfos="chs ilm mhx akq lwx phi okx box gyx car"
    elif [ "${region}" == "wr" ]; then
-      wfos="sew pqr mfr eka mtr lox sgx"
+ #     wfos="sew pqr mfr eka mtr lox sgx"
+       wfos="lox"
    elif [ "${region}" == "pr" ]; then
       wfos="hfo gua"
    elif [ "${region}" == "ar" ]; then
@@ -350,28 +351,63 @@ do                             #read line
                 echo "$CYCLE" > ${DATA}/CYC.${wfo^^}
 
                 echo "Populating jobcards for "${wfo}"..."
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}
-                sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}
+                
+                source $NWPSdir/env/detect_machine.sh
 
-                echo $runit                                                  > ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.${wfo}          >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo} >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log; 
-                qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log
+                if [[ $MACHINE_ID = hera* ]] ; then
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prep_ret_hera.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prep_ret_hera.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret_hera.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret_hera.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret_hera.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret_hera.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}
+                  sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}
 
-                echo 'Submitted run for '${wfo}': '${runit}
+                  echo $runit                                                  > ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  sbatch ${NWPSdir}/dev/ecf/jnwps_prep_ret_hera.ecf.${wfo}        >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  sbatch ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret_hera.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  sbatch ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret_hera.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  :'
+                  qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  qsub ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo} >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  qsub ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  qsub ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                  qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log
+                  '
+                  echo 'Submitted run for '${wfo}': '${runit}
+
+
+                elif [[ $MACHINE_ID = wcoss2 ]]; then
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}
+                     sed "s/%WFO%/$wfo/g" ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.tmpl > ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}
+                     echo $runit                                                  > ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.${wfo}          >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_prep_ret.ecf.${wfo}          >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_forecast_cg1_ret.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_post_cg1_ret.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg1_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_wavetrack_cg1_ret.ecf.${wfo} >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cg0_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_forecast_cgn_ret.ecf.${wfo}  >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_post_cgn_ret.ecf.${wfo}      >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log;
+                     qsub ${NWPSdir}/dev/ecf/jnwps_prdgen_cgn_ret.ecf.${wfo}    >> ${NWPSdir}/dev/ecf/jobids_${wfo}_ret.log
+                     
+                     echo 'Submitted run for '${wfo}': '${runit}
+
+
+                else
+                     echo WARNING: UNKNOWN PLATFORM 1>&2
+                fi
 
                 #ecflow_client --requeue force ${ECF_NAME%/*}/${ecf_wfo} 2> /dev/null
                 #ecflow_client --requeue force ${ECF_NAME%/*}/${ecf_wfo}/jnwps_prep 2> /dev/null

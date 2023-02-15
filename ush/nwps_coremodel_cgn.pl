@@ -103,7 +103,7 @@ print " Rundir: ${RUNdir} \n";
 print " NWPSplatform: ${NWPSplatform} \n";
 print " ++++++++++++++++++ nwps_coremodel_CGn.pl++++++++++++++++++++++\n";
 
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile02 = "${RUNdir}/info_to_nwps_coremodel.txt";
     open IN, "<$infoFile02"  or die "Cannot open: $!";
     our ($NWPSdir, $DEBUGGING, $DEBUG_LEVEL, $BATHYdb, $SHAPEFILEdb, $ARCHdir);
@@ -226,7 +226,7 @@ if ($DEBUGGING eq "TRUE") {
 #
 #for_WCOSS
 #codeswanpl02
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile01 = "${RUNdir}/info_to_makeSwanRun.txt";
     open IN, "<$infoFile01"  or die "Cannot open: $!";
     my $ndata=0;

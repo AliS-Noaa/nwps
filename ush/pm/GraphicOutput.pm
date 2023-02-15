@@ -147,7 +147,7 @@ our (@dataMag,@dataDir);#resulting data (magnitude,direction) from the vector co
 #
 #for_WCOSS
 #codeGraphicOutput01
-if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS')) {
+if((${NWPSplatform} eq 'WCOSS') || (${NWPSplatform} eq 'DEVWCOSS') || (${NWPSplatform} eq 'HERA') || (${NWPSplatform} eq 'DEVHERA')) {
     my $infoFile02 = "${RUNdir}/info_to_nwps_coremodel.txt";
     open IN, "<$infoFile02"  or die "Cannot open: $!";
     our ($NWPSdir, $DEBUGGING, $DEBUG_LEVEL, $BATHYdb, $SHAPEFILEdb, $ARCHdir);

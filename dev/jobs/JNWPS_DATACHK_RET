@@ -35,8 +35,16 @@ export RUN=$(echo ${job}|awk -F"_" '{print $2}')
 # SETUP NWPS SHELL VARIABLES
 # #############################################
 export ver=${nwps_ver}
-export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro
-export COMROOT=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/com/retro
+
+if [[ $MACHINE_ID = hera ]] ; then
+  export DATA=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/$NET/$ver/retro
+  export COMROOT=/scratch1/NCEPDEV/stmp2/${DEVHERA_USER}/com/retro
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export DATA=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/$NET/$ver/retro
+     export COMROOT=/lfs/h2/emc/ptmp/${DEVWCOSS_USER}/com/retro
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
 
 mkdir -p $DATA $COMROOT
 cd $DATA
@@ -90,8 +98,16 @@ export SITETYPE=${SITETYPE:-EMC}
 export MODELTYPE="SWAN"
 
 #export pgmout=OUTPUT.$$
-export utilscript=${UTILROOT}/ush
-export USHutil=${UTILROOT}/ush
+if [[ $MACHINE_ID = hera* ]] ; then
+  export utilscript=${UTILROOT}/bin
+  export USHutil=${UTILROOT}/bin
+elif [[ $MACHINE_ID = wcoss2 ]]; then
+     export utilscript=${UTILROOT}/ush
+     export USHutil=${UTILROOT}/ush
+else
+     echo WARNING: UNKNOWN PLATFORM 1>&2
+fi
+UTI
 sh $utilscript/setpdy.sh
 . ./PDY
 

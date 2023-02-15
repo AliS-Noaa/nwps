@@ -1103,6 +1103,10 @@ then
 elif [ $NWPSplatform == "WCOSS" ]
 then
   NWPSDATA="${DATA}"
+elif [ $NWPSplatform == "HERA" ]
+then
+  NWPSDATA="${DATA}"
+
 fi
 
 # echo "NWPSDATA is: $NWPSDATA. Cleaning old tracking netcdf files."
