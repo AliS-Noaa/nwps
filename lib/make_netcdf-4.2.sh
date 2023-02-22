@@ -37,7 +37,7 @@ make install
 
 cd ${NWPSdir}/lib/sorc
 
-rm -rf hdf5-1_8_9 netcdf-4.2 netcdf-fortran-4.2
+rm -rf hdf5-1_8_9 netcdf-4.2 netcdf-fortran-4.2 gd
 
 git clone -b hdf5-1_8_9 https://github.com/HDFGroup/hdf5.git hdf5-1_8_9
 cd hdf5-1_8_9
