@@ -35,14 +35,12 @@ export CONFIG_SITE=/tmp/dummy
 # Detect machine (sets MACHINE_ID)
 source $NWPSdir/env/detect_machine.sh  #ALI SALIMI 2/5/23 start
 
-# Load modules
-#source $NWPSdir/env/module-setup.sh
-module use $NWPSdir/modulefiles
-module load nwps_$MACHINE_ID
-module list                            #ALI SALIMI 2/5/23 end
 
 if [[ $MACHINE_ID = hera* ]] ; then
   source ../versions/build_hera.ver
+  module use $NWPSdir/modulefiles
+  module load nwps_$MACHINE_ID
+  module list                            #ALI SALIMI 2/5/23 end
   export optFlag="-O3"
   export COMP=ifort
   export COMPC=icc
@@ -50,6 +48,11 @@ if [[ $MACHINE_ID = hera* ]] ; then
 
 elif [[ $MACHINE_ID = wcoss2 ]]; then
     source ../versions/build_wcoss2.ver
+    module reset
+    #source ../modulefiles/build_nwps.modules
+    module use ../modulefiles
+    module load build_nwps.modules.lua
+    module list
     export optFlag="-O3"
     export COMP=ftn
     export COMPC=cc
@@ -58,12 +61,6 @@ elif [[ $MACHINE_ID = wcoss2 ]]; then
 else
     echo WARNING: UNKNOWN PLATFORM 1>&2
 fi
-
-##module reset
-#source ../modulefiles/build_nwps.modules
-##module use ../modulefiles
-##module load build_nwps.modules.lua
-##module list
 
 mkdir -p ${NWPSdir}/exec
 
@@ -80,9 +77,9 @@ export HDF5_INC=${NWPSdir}/lib/hdf5/${hdf5_ver}/include
 export NETCDF_INCLUDES=${NWPSdir}/lib/netcdf/${netcdf_ver}/include
 export NETCDF_LIBRARIES=${NWPSdir}/lib/netcdf/${netcdf_ver}/lib
 export HDF5_LIBRARIES=${NWPSdir}/lib/hdf5/${hdf5_ver}/lib
-export Z_INC=${NWPSdir}/lib/zlib/1.2.8/include
-export Z_LIB=${NWPSdir}/lib/zlib/1.2.8/lib
-export ZLIB_LIBDIR=${NWPSdir}/lib/zlib/1.2.8/lib
+#export Z_INC=${NWPSdir}/lib/zlib/1.2.8/include
+#export Z_LIB=${NWPSdir}/lib/zlib/1.2.8/lib
+#export ZLIB_LIBDIR=${NWPSdir}/lib/zlib/1.2.8/lib
 #FOR DEGRIB
 echo "================== FOR DEGRIB : make_degrib-2.15.sh =================="
 cd ${NWPSdir}/sorc

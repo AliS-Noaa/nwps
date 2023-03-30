@@ -12,17 +12,17 @@ my $hostname = hostname;
 
 my $MACHINE_ID;
 
-if ($hostname =~ /adecflow0[12].acorn.wcoss2.ncep.noaa.gov/) {
+if ($hostname =~ /adecflow0[12]/) {
     $MACHINE_ID = "wcoss2";
-} elsif ($hostname =~ /alogin0[12].acorn.wcoss2.ncep.noaa.gov/) {
+} elsif ($hostname =~ /alogin0[12]/) {
     $MACHINE_ID = "wcoss2";
-} elsif ($hostname =~ /clogin0[1-9].cactus.wcoss2.ncep.noaa.gov/) {
+} elsif ($hostname =~ /clogin0[1-9]/) {
     $MACHINE_ID = "wcoss2";
-} elsif ($hostname =~ /clogin10.cactus.wcoss2.ncep.noaa.gov/) {
+} elsif ($hostname =~ /clogin10/) {
     $MACHINE_ID = "wcoss2";
-} elsif ($hostname =~ /dlogin0[1-9].dogwood.wcoss2.ncep.noaa.gov/) {
+} elsif ($hostname =~ /dlogin0[1-9]/) {
     $MACHINE_ID = "wcoss2";
-} elsif ($hostname =~ /dlogin10.dogwood.wcoss2.ncep.noaa.gov/) {
+} elsif ($hostname =~ /dlogin10/) {
     $MACHINE_ID = "wcoss2";
 } elsif ($hostname =~ /hfe0[1-9]/) {
     $MACHINE_ID = "hera";

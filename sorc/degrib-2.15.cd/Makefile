@@ -10,9 +10,10 @@
 #######################################################################
 CC      = $(C_COMP)
 
-MACHINE_NAME:=$(shell uname -n)
+MACHINE_ID := $(shell $(NWPSdir)/env/detect_machine.sh)
+$(info Machine ID: $(MACHINE_ID))
 
-ifeq ($(MACHINE_NAME),wcoss2)
+ifeq ($(MACHINE_ID),wcoss2)
 
 # Various directories
 BINDIR = ../../exec

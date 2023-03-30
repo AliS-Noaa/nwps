@@ -1,9 +1,11 @@
 # makefile : makes the program runupforecast.exe
 # Author: Andre van der Westhuysen (andre.vanderwesthuysen@noaa.gov)
 # Ali Salimi 2/8/2023 changed it to be machine based
-MACHINE_NAME:=$(shell uname -n)
 
-ifeq ($(MACHINE_NAME),wcoss2)
+MACHINE_ID := $(shell $(NWPSdir)/env/detect_machine.sh)
+$(info Machine ID: $(MACHINE_ID)
+
+ifeq ($(MACHINE_ID),wcoss2)
 FC = ftn
 
 else

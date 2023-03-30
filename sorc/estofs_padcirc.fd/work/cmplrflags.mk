@@ -9,10 +9,12 @@ ifeq ($(MACHINE)-$(OS),x86_64-linux-gnu)
 # ***NOTE*** User must select between various Linux setups
 #            by commenting/uncommenting the appropriate compiler
 #
-MACHINE_NAME:=$(shell uname -n)
+#MACHINE_NAME:=$(shell uname -n)
+MACHINE_ID := $(shell $(NWPSdir)/env/detect_machine.sh)
+$(info Machine ID: $(MACHINE_ID))
 
-ifeq ($(MACHINE_NAME),wcoss2)
-compiler=ncep
+ifeq ($(MACHINE_ID),wcoss2)
+compiler=intel
 else
 compiler=intel
 COMP=ifort
