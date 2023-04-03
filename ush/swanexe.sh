@@ -567,8 +567,8 @@ then
          done
 
          echo "Starting PuNSWAN executable for "${siteid}
-	 #mpiexec -n 48 -ppn 48 ${EXECnwps}/punswan4110.exe
-         srun --ntasks 48 --ntasks-per-node 48 ${EXECnwps}/punswan4110.exe
+	 mpiexec -n 48 -ppn 48 ${EXECnwps}/punswan4110.exe
+         #srun --ntasks 48 --ntasks-per-node 48 ${EXECnwps}/punswan4110.exe
          export err=$?;
          echo "Exit Code: ${err}" | tee -a ${LOGdir}/swan_exe_error.log
          cp ${RUNdir}/PE0000/PRINT ${RUNdir}/
