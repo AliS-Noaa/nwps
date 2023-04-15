@@ -107,7 +107,7 @@ elif [[ $MACHINE_ID = wcoss2 ]]; then
 else
      echo WARNING: UNKNOWN PLATFORM 1>&2
 fi
-UTI
+
 sh $utilscript/setpdy.sh
 . ./PDY
 
