@@ -30,7 +30,7 @@ else
 
         # execute the cgn_cmdfile and capture the exit status of each job
         mpiexec -np 4 --cpu-bind verbose,core bash -c "cd ${RUNdir} && cat cgn_cmdfile | xargs -I {} sh -c '{} && echo \"{}:0\" || echo \"{}:1\"'" | awk -F ':' '{print $1 " " $2}' > $status_file
-
+        export err=$?; err_chk
         # check the status file for failed jobs
         failed_jobs=$(grep ':1' $status_file | awk '{print $1}')
 
@@ -53,7 +53,7 @@ else
 
             # resubmit the failed jobs using the failed file
             mpiexec -np 4 --cpu-bind verbose,core bash -c "cd ${RUNdir} && cat $failed_file | xargs -I {} sh -c '{} && echo \"{}:0\" || echo \"{}:1\"'"
-
+            export err=$?; err_chk
         fi
     done
 fi
