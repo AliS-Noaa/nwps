@@ -104,4 +104,11 @@ done
 #CONTOUR
 
 #rm $FORT20
-
+# =======================================================================
+# Sending data ro DBNET
+# =======================================================================
+if [ "$SENDDBN" = 'YES' ]
+then
+     echo "Sending ${FORT22} to DBNET."
+     $DBNROOT/bin/dbn_alert ${NET} NWPS_ASCII_RUNUP ${job} ${TEMPDIRrunup}/${FORT22}
+fi
