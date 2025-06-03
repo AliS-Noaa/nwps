@@ -352,7 +352,7 @@ FORT23="${WFO}_${NET}_${contour}m_${CGnumber}_ripprob.${fullname}"
 cp ${RIPDATA}/fort.23 ${RIPDATA}/${FORT23}
 
    # =======================================================================
-   # Sending data ro DBNET
+   # Sending data to DBNET
    # =======================================================================
 if [ "$SENDDBN" = 'YES' ]
 then
