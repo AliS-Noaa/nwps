@@ -588,6 +588,18 @@ cd ${DATA}/output/spectra/CG${CGNUM}
         cp -fv  ${spec2dFile} ${COMOUTCYC}/
      fi
 
+  # ----------------------------------------
+  # Send alerts to DBNet
+  # ----------------------------------------
+  if [ "${SENDDBN}" == "YES" ]; then
+    for f in ${spec2dFile}; do
+      if [ -f "${COMOUTCYC}/${f}" ]; then
+        echo "Sending ${f} to DBNet"
+        $DBNROOT/bin/dbn_alert ${NET} NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${f}
+      fi
+    done
+  fi
+
 export WEB="NO"
 echo " "  | tee -a $logfile
 

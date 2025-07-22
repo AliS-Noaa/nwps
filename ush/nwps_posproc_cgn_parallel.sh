@@ -439,6 +439,19 @@ if [[ -d "${DATA}/output/spectra/CG${CGNUM}" ]]; then
       mkdir -p $COMOUTCYC
       cp -fv  ${spec2dFile} ${COMOUTCYC}/
    fi
+  # ----------------------------------------
+  # Send alerts to DBNet
+  # ----------------------------------------
+  if [ "${SENDDBN}" == "YES" ]; then
+    for f in ${spec2dFile}; do
+      if [ -f "${COMOUTCYC}/${f}" ]; then
+        echo "Sending ${f} to DBNet"
+        $DBNROOT/bin/dbn_alert ${NET} NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${f}
+      else
+        echo "Warning: ${COMOUTCYC}/${f} does not exist, skipping DBNet alert"
+      fi
+    done
+  fi
 else
    echo "Wave spectra not computed over this domain (CG${CGNUM})"
 fi
