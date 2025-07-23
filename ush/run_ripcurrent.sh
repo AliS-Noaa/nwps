@@ -357,7 +357,7 @@ cp ${RIPDATA}/fort.23 ${RIPDATA}/${FORT23}
 if [ "$SENDDBN" = 'YES' ]
 then
 	echo "      Sending ${FORT23} to DBNET."
-	$DBNROOT/bin/dbn_alert ${NET} NWPS_ASCII_RIPPROB ${job} ${RIPDATA}/${FORT23}
+	$DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RIPPROB ${job} ${RIPDATA}/${FORT23}
 fi
 
 #exit 0

@@ -595,7 +595,7 @@ cd ${DATA}/output/spectra/CG${CGNUM}
     for f in ${spec2dFile}; do
       if [ -f "${COMOUTCYC}/${f}" ]; then
         echo "Sending ${f} to DBNet"
-        $DBNROOT/bin/dbn_alert ${NET} NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${f}
+        $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${f}
       fi
     done
   fi
