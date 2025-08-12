@@ -348,16 +348,8 @@ done
 done 
 #CONT
 
-FORT23="${WFO}_${NET}_${contour}m_${CGnumber}_ripprob.${fullname}"
+#FORT23="${WFO}_${NET}_${contour}m_${CGnumber}_ripprob.${fullname}"
+FORT23="${NET}_${cycle}z_${contour}m_${CGnumber}_ripprob.${WFO}"
 cp ${RIPDATA}/fort.23 ${RIPDATA}/${FORT23}
-
-   # =======================================================================
-   # Sending data to DBNET
-   # =======================================================================
-if [ "$SENDDBN" = 'YES' ]
-then
-	echo "      Sending ${FORT23} to DBNET."
-	$DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RIPPROB ${job} ${RIPDATA}/${FORT23}
-fi
 
 #exit 0

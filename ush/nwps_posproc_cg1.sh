@@ -201,8 +201,10 @@ echo " " | tee -a $logrunup
         mkdir -p $COMOUTCYC
         cp -fv  ${OUTDIRrunup}/${filein} ${COMOUTCYC}/${filein}
         cp -fv  ${OUTDIRrunup}/${FORT22} ${COMOUTCYC}/${FORT22}
-        if [ "${SENDDBN}" == "YES" ]; then
-            ${DBNROOT}
+        if [ "$SENDDBN" = 'YES' ]
+        then
+             echo "Sending ${FORT22} to DBNET."
+             $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RUNUP ${job} ${COMOUTCYC}/${FORT22}
         fi
      fi
 
@@ -291,6 +293,12 @@ echo " " | tee -a $logrunup
      mkdir -p $COMOUTCYC
      cp -fv  ${RIPDATA}/${CGCONT} ${COMOUTCYC}/${CGCONT}
      cp -fv  ${RIPDATA}/${FORT23} ${COMOUTCYC}/${FORT23}
+
+     if [ "$SENDDBN" = 'YES' ]
+     then
+         echo "Sending ${FORT23} to DBNET."
+	 $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RIPPROB ${job} ${COMOUTCYC}/${FORT23}
+     fi
 
      mkdir -p $GESOUT/riphist/${SITEID}
      cp -fv  ${RIPDATA}/${CGCONT} ${GESOUT}/riphist/${SITEID}/${CGCONT}
@@ -449,7 +457,8 @@ cd ${DATA}/output/grib2/CG${CGNUM}
      mm=$(cat mm)
 
      date_stamp="${yyyy}${mon}${dd}"
-     grib2File="${siteid}_nwps_CG${CGNUM}_${date_stamp}_${hh}${mm}.grib2"
+     #grib2File="${siteid}_nwps_CG${CGNUM}_${date_stamp}_${hh}${mm}.grib2"
+     grib2File="${siteid}_nwps_CG${CGNUM}.grib2"
      cycle=$(awk '{print $1;}' ${RUNdir}/CYCLE)
      COMOUTCYC="${COMOUT}/${cycle}/CG${CGNUM}"
      if [ "${SENDCOM}" == "YES" ]; then
@@ -582,20 +591,30 @@ cd ${DATA}/output/grib2/CG${CGNUM}
 #Sending spec2d files at buoy locations to COMOUT
 cd ${DATA}/output/spectra/CG${CGNUM}
      yy=$(echo $yyyy | cut -c 3-4)
-     spec2dFile="SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh}"
+     #spec2dFile="SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh}"
+     spec2dFile=$(ls SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh} 2>/dev/null)
      if [ "${SENDCOM}" == "YES" ]; then
-        mkdir -p $COMOUTCYC
-        cp -fv  ${spec2dFile} ${COMOUTCYC}/
+       mkdir -p "${COMOUTCYC}"
+       for orig_file in ${spec2dFile}; do
+         # Extract bouy ID
+         suffix=$(echo "$orig_file" | cut -d '.' -f2)
+         new_spc2d="nwps_${cycle}z_spc2d_${suffix}_${CGNUM}.${WFO}"
+
+         cp -fv "$orig_file" "${COMOUTCYC}/${new_spc2d}"
+       done
      fi
+
 
   # ----------------------------------------
   # Send alerts to DBNet
   # ----------------------------------------
   if [ "${SENDDBN}" == "YES" ]; then
-    for f in ${spec2dFile}; do
-      if [ -f "${COMOUTCYC}/${f}" ]; then
-        echo "Sending ${f} to DBNet"
-        $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${f}
+    for file in ${spec2dFile}; do
+      suffix=$(echo "$file" | cut -d '.' -f2)
+      new_spc2d="nwps_${cycle}z_spc2d_${suffix}_${CGNUM}.${WFO}"
+      if [ -f "${COMOUTCYC}/${new_spc2d}" ]; then
+        echo "Sending ${new_spc2d} to DBNet"
+        $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${new_spc2d}
       fi
     done
   fi

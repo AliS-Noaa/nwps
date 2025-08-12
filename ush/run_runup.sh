@@ -39,7 +39,7 @@ fi
 # ======================================================================
 export FORT20="${CONTOUR}_${CG}_data.txt"
 export FORT21="${CG}.${SITEID}_slopes.txt"
-export FORT22="${WFO}_${NET}_${CONTOUR}_${CG}_runup.${DATE}_${CYCLE}"
+export FORT22="${NET}_${CYCLE}z_${CONTOUR}_${CG}_runup.${WFO}"
 #
 # ======================================================================
 # Set up the output file
@@ -104,11 +104,3 @@ done
 #CONTOUR
 
 #rm $FORT20
-# =======================================================================
-# Sending data to DBNET
-# =======================================================================
-if [ "$SENDDBN" = 'YES' ]
-then
-     echo "Sending ${FORT22} to DBNET."
-     $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RUNUP ${job} ${TEMPDIRrunup}/${FORT22}
-fi
