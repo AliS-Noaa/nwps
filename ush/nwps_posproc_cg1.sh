@@ -597,7 +597,7 @@ cd ${DATA}/output/spectra/CG${CGNUM}
        for orig_file in ${spec2dFile}; do
          # Extract bouy ID
          suffix=$(echo "$orig_file" | cut -d '.' -f2)
-         new_spc2d="nwps_${cycle}z_spc2d_${suffix}_${CGNUM}.${WFO}"
+         new_spc2d="nwps.t${cycle}z.spc2d_${suffix}_CG${CGNUM}.${WFO}.txt"
 
          cp -fv "$orig_file" "${COMOUTCYC}/${new_spc2d}"
        done
@@ -610,7 +610,7 @@ cd ${DATA}/output/spectra/CG${CGNUM}
   if [ "${SENDDBN}" == "YES" ]; then
     for file in ${spec2dFile}; do
       suffix=$(echo "$file" | cut -d '.' -f2)
-      new_spc2d="nwps_${cycle}z_spc2d_${suffix}_${CGNUM}.${WFO}"
+      new_spc2d="nwps.t${cycle}z.spc2d_${suffix}_CG${CGNUM}.${WFO}.txt"
       if [ -f "${COMOUTCYC}/${new_spc2d}" ]; then
         echo "Sending ${new_spc2d} to DBNet"
         $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${new_spc2d}

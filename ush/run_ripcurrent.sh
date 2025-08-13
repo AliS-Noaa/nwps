@@ -349,7 +349,7 @@ done
 #CONT
 
 #FORT23="${WFO}_${NET}_${contour}m_${CGnumber}_ripprob.${fullname}"
-FORT23="${NET}_${cycle}z_${contour}m_${CGnumber}_ripprob.${WFO}"
+FORT23="${NET}.t${cycle}z.${contour}m_${CGnumber}_ripprob.${WFO}.txt"
 cp ${RIPDATA}/fort.23 ${RIPDATA}/${FORT23}
 
 #exit 0
