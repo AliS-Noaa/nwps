@@ -39,7 +39,7 @@ fi
 # ======================================================================
 export FORT20="${CONTOUR}_${CG}_data.txt"
 export FORT21="${CG}.${SITEID}_slopes.txt"
-export FORT22="${NET}.t${CYCLE}z.${CONTOUR}_${CG}_runup.${WFO}.txt"
+export FORT22="${NET}.t${CYCLE%??}z.${CONTOUR}_${CG}_runup.${WFO}.txt"
 #
 # ======================================================================
 # Set up the output file
