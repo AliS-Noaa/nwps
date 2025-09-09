@@ -587,10 +587,16 @@ cd ${DATA}/output/grib2/CG${CGNUM}
 #Sending spec2d files at buoy locations to COMOUT
 cd ${DATA}/output/spectra/CG${CGNUM}
      yy=$(echo $yyyy | cut -c 3-4)
-     spec2dFile="SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh}"
+     spec2dFile=$(ls SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh} 2>/dev/null)
      if [ "${SENDCOM}" == "YES" ]; then
-        mkdir -p $COMOUTCYC
-        cp -fv  ${spec2dFile} ${COMOUTCYC}/
+       mkdir -p "${COMOUTCYC}"
+       for orig_file in ${spec2dFile}; do
+         # Extract bouy ID
+         suffix=$(echo "$orig_file" | cut -d '.' -f2)
+         new_spc2d="nwps.t${cycle}z.spc2d_${suffix}_CG${CGNUM}.${WFO}.txt"
+
+         cp -fv "$orig_file" "${COMOUTCYC}/${new_spc2d}"
+       done
      fi
 
 export WEB="NO"
