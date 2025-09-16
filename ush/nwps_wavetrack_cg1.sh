@@ -43,9 +43,9 @@ if [ "${hastracking}" == "TRUE" ]
    fi
 
 
-   # 1) Parse YYYY MM DD HH MM from the INPGRID WIND line (11th field)
+   # 1) Parse YYYY MM DD HH MM from the INPGRID WIND line
    init="$(awk '/^INPGRID[[:space:]]+WIND/{print $11; exit}' "$inputparm")"  # e.g., 20250911.1800
-   ts="${init//[^0-9]/}"                          # strip any dot/underscore -> 202509111800
+   ts="${init//[^0-9]/}"
    yyyy="${ts:0:4}"; mon="${ts:4:2}"; dd="${ts:6:2}"; hh="${ts:8:2}"; mm="${ts:10:2}"
 
    # Sanity check
@@ -58,13 +58,12 @@ if [ "${hastracking}" == "TRUE" ]
    export PDY_INPUT="${yyyy}${mon}${dd}"
 
    # Prefer workflow cycle file; fallback to parsed hour
-   cycleout="$(awk 'NR==1{print $1}' "${RUNdir}/CYCLE" 2>/dev/null || true)"
-   [ -z "${cycleout}" ] && cycleout="${hh}"
-   cycleout="$(printf '%02d' "${cycleout#0}")"
-   export cycleout
+   cycle="$(awk 'NR==1{print $1}' "${RUNdir}/CYCLE" 2>/dev/null || true)"
+   [ -z "${cycle}" ] && cycle="${hh}"
+   cycle="$(printf '%02d' "${cycle#0}")"
+   export cycle
 
    # 3) Rebuild COMOUT for the correct day from the existing COMOUT path
-   #     COMOUT shape: .../<REGION>.<PDY>/<WFO>   (e.g., .../er.20250911/box)
    COMOUT_WFO="$(basename -- "$COMOUT")"            # -> <WFO> (site folder, e.g., box)
    COMOUT_PARENT="$(dirname -- "$COMOUT")"          # -> .../<REGION>.<PDY>
    REGION_DOT_PDY="$(basename -- "$COMOUT_PARENT")" # -> <REGION>.<PDY> (e.g., er.20250911)
