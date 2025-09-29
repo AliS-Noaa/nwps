@@ -241,8 +241,10 @@ export COMOUT_CORRECT="${COMOUT_ROOT}/${REGION_ONLY}.${PDY_INPUT}/${COMOUT_WFO}"
         mkdir -p $COMOUTCYC
         cp -fv  ${OUTDIRrunup}/${filein} ${COMOUTCYC}/${filein}
         cp -fv  ${OUTDIRrunup}/${FORT22} ${COMOUTCYC}/${FORT22}
-        if [ "${SENDDBN}" == "YES" ]; then
-            ${DBNROOT}
+        if [ "$SENDDBN" = 'YES' ]
+        then
+             echo "Sending ${FORT22} to DBNET."
+             $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RUNUP ${job} ${COMOUTCYC}/${FORT22}
         fi
      fi
 
@@ -331,6 +333,12 @@ export COMOUT_CORRECT="${COMOUT_ROOT}/${REGION_ONLY}.${PDY_INPUT}/${COMOUT_WFO}"
      mkdir -p $COMOUTCYC
      cp -fv  ${RIPDATA}/${CGCONT} ${COMOUTCYC}/${CGCONT}
      cp -fv  ${RIPDATA}/${FORT23} ${COMOUTCYC}/${FORT23}
+
+     if [ "$SENDDBN" = 'YES' ]
+     then
+         echo "Sending ${FORT23} to DBNET."
+	 $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_RIPPROB ${job} ${COMOUTCYC}/${FORT23}
+     fi
 
      mkdir -p $GESOUT/riphist/${SITEID}
      cp -fv  ${RIPDATA}/${CGCONT} ${GESOUT}/riphist/${SITEID}/${CGCONT}
@@ -622,11 +630,33 @@ cd ${DATA}/output/grib2/CG${CGNUM}
 #Sending spec2d files at buoy locations to COMOUT
 cd ${DATA}/output/spectra/CG${CGNUM}
      yy=$(echo $yyyy | cut -c 3-4)
-     spec2dFile="SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh}"
+     #spec2dFile="SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh}"
+     spec2dFile=$(ls SPC2D.*.CG${CGNUM}.YY${yy}.MO${mon}.DD${dd}.HH${hh} 2>/dev/null)
      if [ "${SENDCOM}" == "YES" ]; then
-        mkdir -p $COMOUTCYC
-        cp -fv  ${spec2dFile} ${COMOUTCYC}/
+       mkdir -p "${COMOUTCYC}"
+       for orig_file in ${spec2dFile}; do
+         # Extract bouy ID
+         suffix=$(echo "$orig_file" | cut -d '.' -f2)
+         new_spc2d="nwps.t${cycle}z.spc2d_${suffix}_CG${CGNUM}.${WFO}.txt"
+
+         cp -fv "$orig_file" "${COMOUTCYC}/${new_spc2d}"
+       done
      fi
+
+
+  # ----------------------------------------
+  # Send alerts to DBNet
+  # ----------------------------------------
+  if [ "${SENDDBN}" == "YES" ]; then
+    for file in ${spec2dFile}; do
+      suffix=$(echo "$file" | cut -d '.' -f2)
+      new_spc2d="nwps.t${cycle}z.spc2d_${suffix}_CG${CGNUM}.${WFO}.txt"
+      if [ -f "${COMOUTCYC}/${new_spc2d}" ]; then
+        echo "Sending ${new_spc2d} to DBNet"
+        $DBNROOT/bin/dbn_alert MODEL NWPS_ASCII_SPECTRA ${job} ${COMOUTCYC}/${new_spc2d}
+      fi
+    done
+  fi
 
 export WEB="NO"
 echo " "  | tee -a $logfile
