@@ -3,46 +3,4 @@
 #RD/opc
 #RD/nhc
 # WFO Southern Region (SR) domains
-SR/mfl
-SR/bro
-SR/crp
-SR/hgx
-SR/lch
-SR/lix
-SR/mob
-SR/tae
-SR/tbw
-SR/key
-SR/mlb
-SR/jax
-SR/sju
-# WFO Eastern Region (ER) domains
-ER/car
-ER/gyx
-ER/box
-ER/okx
-ER/phi
-ER/lwx
-ER/akq
-ER/mhx
-ER/ilm
-ER/chs
-#Western Region (WR) Domains
-WR/sgx
-WR/lox
-WR/mtr
-WR/eka
-WR/mfr
-WR/pqr
 WR/sew
-#Pacific Region (PR) Domains
-PR/hfo
-PR/gum
-PR/gua
-#Alaska Region (AR) Domains
-AR/ajk
-AR/aer
-AR/alu
-AR/afg
-# Test domains
-#TD/txx
